@@ -9,7 +9,7 @@ import { GaussianSplatAnimator } from "./gaussianSplatAnimator.js";
 // ------------------------------------------------------------
 // Constants & Types
 // ------------------------------------------------------------
-const LOAD_TIMEOUT_MS = 30_000;
+const LOAD_TIMEOUT_MS = 120_000;
 
 interface SplatInstance {
   splat: SplatMesh;
@@ -199,6 +199,9 @@ export class GaussianSplatLoaderSystem extends createSystem({
 
     // Render splats behind UI panels (which use AlwaysDepth + high renderOrder)
     splat.renderOrder = -10;
+    // Disable raycasting so the splat doesn't block locomotion
+    splat.raycast = () => {};
+    splat.traverse((child) => { child.raycast = () => {}; });
     parent.add(splat);
     if (collider) parent.add(collider);
 

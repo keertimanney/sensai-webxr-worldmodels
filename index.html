@@ -10,6 +10,68 @@
   </head>
   <body style="margin: 0">
     <div id="scene-container" style="background:#000"></div>
+
+    <div id="splat-controls" style="
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-family: system-ui, sans-serif;
+      font-size: 14px;
+    ">
+
+    <select id="splat-picker" style="
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 9999;
+      padding: 8px 12px;
+      font-size: 14px;
+      font-family: system-ui, sans-serif;
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      cursor: pointer;
+    ">
+      <option value="./splats/worldlabs-100k.spz">World Labs — 100k</option>
+      <option value="./splats/worldlabs-500k.spz">World Labs — 500k</option>
+      <option value="./splats/worldlabs-full.spz">World Labs — Full Res</option>
+      <option value="./splats/sensai.spz">Sensai (original)</option>
+    </select>
+
+    <div style="display:flex; gap:6px; align-items:center;">
+      <label style="color:#fff; min-width:55px;">Rot X</label>
+      <input id="rot-x" type="range" min="-180" max="180" value="0" style="flex:1;">
+      <span id="rot-x-val" style="color:#fff; min-width:40px;">0°</span>
+    </div>
+    <div style="display:flex; gap:6px; align-items:center;">
+      <label style="color:#fff; min-width:55px;">Rot Y</label>
+      <input id="rot-y" type="range" min="-180" max="180" value="0" style="flex:1;">
+      <span id="rot-y-val" style="color:#fff; min-width:40px;">0°</span>
+    </div>
+    <div style="display:flex; gap:6px; align-items:center;">
+      <label style="color:#fff; min-width:55px;">Rot Z</label>
+      <input id="rot-z" type="range" min="-180" max="180" value="0" style="flex:1;">
+      <span id="rot-z-val" style="color:#fff; min-width:40px;">0°</span>
+    </div>
+
+    <div style="display:flex; gap:6px; align-items:center;">
+      <label style="color:#fff; min-width:55px;">Pos Y</label>
+      <input id="pos-y" type="range" min="-10" max="10" value="1.5" step="0.1" style="flex:1;">
+      <span id="pos-y-val" style="color:#fff; min-width:40px;">1.5</span>
+    </div>
+
+    <label style="display:flex; gap:6px; align-items:center; color:#fff; cursor:pointer;">
+      <input id="grid-toggle" type="checkbox">
+      Show Grid
+    </label>
+
+    </div>
+
     <script type="module" src="/src/index.ts"></script>
   </body>
 </html>
