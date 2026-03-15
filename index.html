@@ -66,6 +66,42 @@
     </div>
 
     <label style="display:flex; gap:6px; align-items:center; color:#fff; cursor:pointer;">
+      <input id="collider-toggle" type="checkbox">
+      Show Collider Mesh
+    </label>
+
+    <div style="display:flex; gap:6px; align-items:center;">
+      <label style="color:#fff; min-width:95px;">Collider Scale</label>
+      <input id="collider-scale" type="range" min="0.2" max="3.0" step="0.01" value="1.00" style="flex:1;">
+      <span id="collider-scale-val" style="color:#fff; min-width:40px;">1.00</span>
+    </div>
+    <div style="display:flex; gap:6px; align-items:center;">
+      <label style="color:#fff; min-width:95px;">Collider Yaw</label>
+      <input id="collider-yaw" type="range" min="-180" max="180" step="1" value="180" style="flex:1;">
+      <span id="collider-yaw-val" style="color:#fff; min-width:40px;">180°</span>
+    </div>
+    <div style="display:flex; gap:6px; align-items:center;">
+      <label style="color:#fff; min-width:95px;">Collider Pos X</label>
+      <input id="collider-off-x" type="range" min="-5" max="5" step="0.01" value="0" style="flex:1;">
+      <span id="collider-off-x-val" style="color:#fff; min-width:40px;">0.00</span>
+    </div>
+    <div style="display:flex; gap:6px; align-items:center;">
+      <label style="color:#fff; min-width:95px;">Collider Pos Y</label>
+      <input id="collider-off-y" type="range" min="-5" max="5" step="0.01" value="0" style="flex:1;">
+      <span id="collider-off-y-val" style="color:#fff; min-width:40px;">0.00</span>
+    </div>
+    <div style="display:flex; gap:6px; align-items:center;">
+      <label style="color:#fff; min-width:95px;">Collider Pos Z</label>
+      <input id="collider-off-z" type="range" min="-5" max="5" step="0.01" value="0" style="flex:1;">
+      <span id="collider-off-z-val" style="color:#fff; min-width:40px;">0.00</span>
+    </div>
+
+    <label style="display:flex; gap:6px; align-items:center; color:#fff; cursor:pointer;">
+      <input id="nav-toggle" type="checkbox">
+      Show Nav Graph
+    </label>
+
+    <label style="display:flex; gap:6px; align-items:center; color:#fff; cursor:pointer;">
       <input id="grid-toggle" type="checkbox">
       Show Grid
     </label>
