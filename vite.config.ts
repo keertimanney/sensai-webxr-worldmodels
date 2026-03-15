@@ -1,8 +1,12 @@
 import path from "path";
+import { config as dotenvConfig } from "dotenv";
 import { injectIWER } from "@iwsdk/vite-plugin-iwer";
 import { compileUIKit } from "@iwsdk/vite-plugin-uikitml";
 import { defineConfig, type Plugin } from "vite";
 import mkcert from "vite-plugin-mkcert";
+import { analyzeApiPlugin } from "./src/server/analyzePlugin";
+
+dotenvConfig();
 
 // Uncomment the import below and add optimizeGLTF() to the plugins array
 // when you place GLTF/GLB files in public/gltf/:
@@ -41,6 +45,7 @@ function deduplicateThree(): Plugin {
 export default defineConfig({
   plugins: [
     deduplicateThree(),
+    analyzeApiPlugin(),
     mkcert(),
     injectIWER({
       device: "metaQuest3",

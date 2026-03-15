@@ -9,8 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.58",
+    "@ai-sdk/gateway": "^3.0.66",
     "@iwsdk/core": "0.2.2",
     "@sparkjsdev/spark": "github:sparkjsdev/spark#v2.0.0-preview",
+    "ai": "^6.0.116",
+    "dotenv": "^17.3.1",
     "three": "npm:super-three@0.181.0"
   },
   "devDependencies": {

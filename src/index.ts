@@ -20,6 +20,8 @@ import { PanelSystem } from "./uiPanel.js";
 import { GaussianSplatLoader, GaussianSplatLoaderSystem,} from "./gaussianSplatLoader.js";
 import { spawnHologramSphere } from "./interactableExample.js";
 import { Companion, CompanionSystem, createCompanionMesh, DistanceGrabbable, MovementMode } from "./companion.js";
+import { CaptureWidget, CaptureWidgetSystem, createCaptureWidgetMesh } from "./captureWidget.js";
+import { CaptureAnimator } from "./captureAnimation.js";
 
 
 type BoundsLike = {
@@ -221,7 +223,8 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
     world
       .registerSystem(PanelSystem)
       .registerSystem(GaussianSplatLoaderSystem)
-      .registerSystem(CompanionSystem);
+      .registerSystem(CompanionSystem)
+      .registerSystem(CaptureWidgetSystem);
 
 
     // ------------------------------------------------------------
@@ -334,6 +337,13 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
       (value) => { colliderFineTune.offsetZ = value; },
     );
 
+    // Create capture animator early so collider callback can register meshes
+    const captureAnimator = new CaptureAnimator(
+      world.scene,
+      world.camera as THREE.PerspectiveCamera,
+      world.renderer as THREE.WebGLRenderer,
+    );
+
     new GLTFLoader().load("./splats/worldlabs-collider.glb", async (gltf) => {
       colliderFineTuneRoot = new THREE.Group();
       colliderContainer.add(colliderFineTuneRoot);
@@ -366,6 +376,15 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
         edgeProbeHeight: 0.2,
       });
 
+      // Collect collider meshes for capture animation raycasting
+      // (must be done BEFORE raycast is disabled on them)
+      const colliderMeshes: THREE.Mesh[] = [];
+      gltf.scene.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          colliderMeshes.push(child as THREE.Mesh);
+        }
+      });
+
       // Now set up wireframe overlay and disable raycasting for locomotion
       const wireframeMat = new THREE.MeshBasicMaterial({
         color: 0x00ff88,
@@ -382,6 +401,9 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
         }
       });
       console.log("[Collider] Loaded wireframe collider mesh");
+
+      // Give capture animator access to collider meshes for gaze raycasting
+      captureAnimator.setColliderMeshes(colliderMeshes);
 
       // Debug visualization overlay in collider-local space so it stays anchored.
       navOverlayContainer.clear();
@@ -502,19 +524,13 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
 
 
     // ------------------------------------------------------------
-    // Floating Companion (glowing sphere, follows camera)
+    // Capture Widget (floating 3D button, left side of user)
     // ------------------------------------------------------------
-    const companionMesh = createCompanionMesh();
-    companionMesh.position.set(0.4, 1.2, -1.2);
-    const companionEntity = world.createTransformEntity(companionMesh as any);
-    companionEntity.addComponent(Companion);
-    companionEntity.addComponent(Interactable);
-    companionEntity.addComponent(DistanceGrabbable, {
-      movementMode: MovementMode.MoveAtSource,
-      translate: true,
-      rotate: false,
-      scale: false,
-    });
+    const captureWidgetMesh = createCaptureWidgetMesh();
+    captureWidgetMesh.position.set(-0.5, 1.2, -0.4);
+    const captureWidgetEntity = world.createTransformEntity(captureWidgetMesh as any);
+    captureWidgetEntity.addComponent(CaptureWidget);
+    captureWidgetEntity.addComponent(Interactable);
 
 
     // ------------------------------------------------------------
@@ -537,6 +553,46 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
         width: "40%",
       });
     panelEntity.object3D!.position.set(0, 1.29, -1.9);
+
+
+    // ------------------------------------------------------------
+    // Capture Animation — spatial 4-state analysis flow
+    // ------------------------------------------------------------
+    // (captureAnimator created earlier, before collider load)
+
+    // Update animator every frame via a simple animation loop hook
+    const animClock = new THREE.Clock();
+    const animLoop = () => {
+      const dt = animClock.getDelta();
+      captureAnimator.update(dt);
+      requestAnimationFrame(animLoop);
+    };
+    requestAnimationFrame(animLoop);
+
+    const doCapture = () => {
+      if (captureAnimator.isActive) return; // prevent overlapping captures
+      captureAnimator.start();
+    };
+
+    // Desktop button
+    const captureBtn = document.getElementById("capture-btn") as HTMLButtonElement;
+    if (captureBtn) {
+      captureBtn.addEventListener("click", doCapture);
+    }
+
+    // 3D widget
+    const captureSystem = world.getSystem(CaptureWidgetSystem);
+    if (captureSystem) {
+      captureSystem.onCapture = doCapture;
+    }
+
+    // Keyboard shortcut: P
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "p" || e.key === "P") {
+        if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+        doCapture();
+      }
+    });
 
   })
   .catch((err) => {

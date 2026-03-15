@@ -108,6 +108,78 @@
 
     </div>
 
+    <button id="capture-btn" style="
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-family: system-ui, sans-serif;
+      font-weight: 600;
+      background: rgba(79, 195, 247, 0.9);
+      color: #000;
+      border: none;
+      border-radius: 24px;
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(79, 195, 247, 0.4);
+    ">Capture View</button>
+
+    <!-- Preview overlay for captured screenshot -->
+    <div id="capture-preview" style="
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: rgba(0,0,0,0.85);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+    ">
+      <img id="capture-img" style="
+        max-width: 80vw;
+        max-height: 50vh;
+        border-radius: 8px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+      ">
+      <div id="analysis-box" style="
+        max-width: 80vw;
+        padding: 16px 20px;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 8px;
+        color: #fff;
+        font-family: system-ui, sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+      ">Analyzing...</div>
+      <div style="display:flex; gap:12px;">
+        <button id="capture-download" style="
+          padding: 10px 20px;
+          font-size: 14px;
+          font-family: system-ui, sans-serif;
+          background: #4fc3f7;
+          color: #000;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+        ">Download</button>
+        <button id="capture-close" style="
+          padding: 10px 20px;
+          font-size: 14px;
+          font-family: system-ui, sans-serif;
+          background: rgba(255,255,255,0.15);
+          color: #fff;
+          border: 1px solid rgba(255,255,255,0.2);
+          border-radius: 8px;
+          cursor: pointer;
+        ">Close</button>
+      </div>
+    </div>
+
     <script type="module" src="/src/index.ts"></script>
   </body>
 </html>
